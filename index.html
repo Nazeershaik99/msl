@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MLS Point Locator</title>
+    <!-- PDF Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.7.0/dist/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/5988/5988658.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="main-container">
+      <!-- Header -->
+      <header class="header">
+        <div class="header-left">
+          <div class="logo">
+            <i class="fas fa-map-marker-alt"></i>
+          </div>
+          <h1 class="header-title">MLS Point Locator</h1>
+        </div>
+        <div class="header-right">
+          <div class="status-indicator" id="statusIndicator">
+            <div class="status-dot"></div>
+            <span id="statusText">Online</span>
+          </div>
+          <button class="nav-btn" onclick="window.location.href='dashboard.html'">
+            <i class="fas fa-chart-line"></i>
+            Dashboard
+          </button>
+          <div class="user-info">
+            <i class="fas fa-user-circle"></i>
+            <span id="currentUser">Loading...</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <!-- Quick Search -->
+        <div class="sidebar-section">
+          <h3 class="sidebar-title">
+            <i class="fas fa-search"></i>
+            Quick Search
+          </h3>
+          <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" id="mlsCodeSearch" class="search-input" placeholder="Enter MLS Point Code..." autocomplete="off" />
+            <div id="autocompleteDropdown" class="autocomplete-dropdown"></div>
+          </div>
+          <button class="btn btn-primary" onclick="searchByMLSCode()" id="searchBtn">
+            <i class="fas fa-search"></i>
+            Search Point
+          </button>
+          <button class="btn btn-secondary" onclick="clearSearch()" id="clearBtn">
+            <i class="fas fa-times"></i>
+            Clear Search
+          </button>
+        </div>
+
+        <!-- Location Filter -->
+        <div class="sidebar-section">
+          <h3 class="sidebar-title">
+            <i class="fas fa-map"></i>
+            Location Filter
+          </h3>
+          <div class="form-group">
+            <label class="form-label" for="district">District</label>
+            <select id="district" class="form-select">
+              <option value="">Choose a district...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="mandal">Mandal</label>
+            <select id="mandal" class="form-select" disabled>
+              <option value="">Choose a mandal...</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" onclick="loadMLSPoints()" id="loadBtn" disabled>
+            <i class="fas fa-map-marker-alt"></i>
+            Load Points
+          </button>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="sidebar-section">
+          <h3 class="sidebar-title">
+            <i class="fas fa-chart-bar"></i>
+            Quick Stats
+          </h3>
+          <div class="quick-stats">
+            <div class="stat-item">
+              <span class="stat-number" id="totalPoints">0</span>
+              <span class="stat-label">Total Points</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number" id="activePoints">0</span>
+              <span class="stat-label">Active</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <div id="map"></div>
+        <div class="map-controls">
+          <button class="map-control-btn" onclick="resetMapView()" title="Reset View">
+            <i class="fas fa-home"></i>
+          </button>
+          <button class="map-control-btn" onclick="toggleFullscreen()" title="Fullscreen">
+            <i class="fas fa-expand"></i>
+          </button>
+        </div>
+        <div id="statusBanner" class="status-banner">
+          <span id="bannerText"></span>
+        </div>
+      </main>
+
+      <!-- Details Panel -->
+      <section class="details-panel" id="detailsPanel">
+        <div class="empty-state">
+          <div class="empty-state-icon">
+            <i class="fas fa-map-marker-alt"></i>
+          </div>
+          <h3>Welcome to MLS Locator</h3>
+          <p>
+            Select an MLS point from the map or use the search functionality to view detailed information and generate reports.
+          </p>
+        </div>
+      </section>
+    </div>
+
+    <!-- Hidden PDF Template Container -->
+    <div id="pdfTemplateContainer" style="display: none; position: absolute; left: -9999px; top: -9999px;">
+      <!-- PDF Template will be inserted here -->
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>
